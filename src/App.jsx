@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Books from "./pages/Books.jsx";
 import BookDetail from "./pages/BookDetail.jsx";
 import Register, { registerAction } from "./pages/Register.jsx";
@@ -9,6 +9,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/" element={<Navigate to="/books" />} />
         <Route path="/books" element={<Books />} />
         <Route path="/books/:id" element={<BookDetail />} />
         <Route
