@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 
-// Link API
+// Links API
 const API = import.meta.env.VITE_API;
 
 // Loads Book Details

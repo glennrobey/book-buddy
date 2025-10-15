@@ -1,8 +1,9 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Books from "./pages/Books";
-import BookDetail from "./pages/BookDetail";
-import Register, { registerAction } from "./pages/Register";
-import Login, { loginAction } from "./pages/Login";
+import Books from "./pages/Books.jsx";
+import BookDetail from "./pages/BookDetail.jsx";
+import Register, { registerAction } from "./pages/Register.jsx";
+import Login, { loginAction } from "./pages/Login.jsx";
+import Account from "./pages/Account.jsx";
 
 export default function App() {
   return (
@@ -16,6 +17,7 @@ export default function App() {
           action={registerAction}
         />
         <Route path="/login" element={<Login />} action={loginAction} />
+        <Route path="/account" element={<Account />} />
       </Routes>
     </BrowserRouter>
   );
