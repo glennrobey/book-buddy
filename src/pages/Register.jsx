@@ -1,56 +1,100 @@
-import { Form, useActionData, redirect } from "react-router-dom";
+import { useState } from "react";
 
-// Links API
+// Links API base URL
 const API = import.meta.env.VITE_API;
 
 export default function Register() {
-  const data = useActionData();
+  // Local state: form fields, error message, and loading state
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  //   Registers Page
+  // Handles form submission and registration request
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setError(null);
+    setLoading(true);
+
+    try {
+      // Sends registration info to API
+      const res = await fetch(`${API}/users/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password }),
+      });
+
+      const data = await res.json();
+
+      // Throws error if response is not successful
+      if (!res.ok) {
+        throw new Error(data.message || "Registration failed");
+      }
+
+      // Success message
+      alert("Registration successful! Please log in.");
+      setName("");
+      setEmail("");
+      setPassword("");
+    } catch (err) {
+      // Handles and displays any errors
+      setError(err.message);
+    } finally {
+      // Always disables loading after request completes
+      setLoading(false);
+    }
+  }
+
+  // Renders the registration form
   return (
     <article>
       <h1>Register</h1>
-      {data?.error && <p style={{ color: "red" }}>Error: {data.error}</p>}
 
-      <Form method="post">
-        <div>
-          <label htmlFor="name">Name:</label>
-          <input id="name" name="name" type="text" required />
-        </div>
+      {/* Error display */}
+      {error && <p style={{ color: "red" }}>Error: {error}</p>}
 
-        <div>
-          <label htmlFor="email">Email:</label>
-          <input id="email" name="email" type="email" required />
-        </div>
+      <form onSubmit={handleSubmit}>
+        {/* Name field */}
+        <label>
+          Name:
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+          />
+        </label>
 
-        <div>
-          <label htmlFor="password">Password:</label>
-          <input id="password" name="password" type="password" required />
-        </div>
+        {/* Email field */}
+        <label>
+          Email:
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            autoComplete="username"
+          />
+        </label>
 
-        <button type="submit">Register</button>
-      </Form>
+        {/* Password field */}
+        <label>
+          Password:
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            autoComplete="current-password"
+          />
+        </label>
+
+        {/* Submit button with loading text */}
+        <button type="submit" disabled={loading}>
+          {loading ? "Registering..." : "Register"}
+        </button>
+      </form>
     </article>
   );
-}
-
-// Handles Form Submit
-export async function registerAction({ request }) {
-  const formData = Object.fromEntries(await request.formData());
-
-  try {
-    const res = await fetch(`${API}/users/register`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
-    });
-
-    const data = await res.json();
-
-    if (!res.ok) return { error: data.message || "Registration failed" };
-
-    return redirect("/login");
-  } catch (err) {
-    return { error: err.message };
-  }
 }

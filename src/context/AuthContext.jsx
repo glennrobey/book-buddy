@@ -15,12 +15,12 @@ export function AuthProvider({ children }) {
     const savedToken = localStorage.getItem("token");
 
     if (savedUser && savedToken) {
-      setUser(JSON.parse(savedUser)); // fixed typo: JSON.pard → JSON.parse
+      setUser(JSON.parse(savedUser));
       setToken(savedToken);
     }
 
     setLoading(false);
-  }, []); // added empty dependency array
+  }, []);
 
   // Login function
   const login = (userData, authToken) => {

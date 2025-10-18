@@ -40,7 +40,7 @@ export default function Login() {
 
       // Logs in the user and redirects to their account page
       login(data.user, data.token);
-      navigate("/account");
+      navigate("/account"); // <-- redirect to account after login
     } catch (err) {
       // Handles and displays any errors
       setError(err.message);
@@ -63,6 +63,7 @@ export default function Login() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            autoComplete="username"
           />
         </label>
 
@@ -74,6 +75,7 @@ export default function Login() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            autoComplete="current-password"
           />
         </label>
 

@@ -16,15 +16,12 @@ export default function BookDetail() {
       try {
         const res = await fetch(`${API}/books/${id}`);
         if (!res.ok) throw new Error("Failed to fetch book");
-
         const data = await res.json();
-
         setBook(data.book || data);
       } catch (err) {
         setError(err.message);
       }
     }
-
     fetchBook();
   }, [id]);
 
