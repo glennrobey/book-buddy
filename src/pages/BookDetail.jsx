@@ -10,26 +10,29 @@ export default function BookDetail() {
   const [book, setBook] = useState(null);
   const [error, setError] = useState(null);
 
-  // Fetches Books
+  // Fetches Book Details
   useEffect(() => {
     async function fetchBook() {
       try {
         const res = await fetch(`${API}/books/${id}`);
         if (!res.ok) throw new Error("Failed to fetch book");
+
         const data = await res.json();
-        setBook(data.book);
+
+        setBook(data.book || data);
       } catch (err) {
         setError(err.message);
       }
     }
+
     fetchBook();
   }, [id]);
 
-  // Logging Error If No Books Loaded
+  // Error handling
   if (error) return <p>Error: {error}</p>;
   if (!book) return <p>Loading book details...</p>;
 
-  // Displays Books
+  // Display book info
   return (
     <div>
       <h1>{book.title}</h1>

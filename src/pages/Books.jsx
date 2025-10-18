@@ -2,6 +2,7 @@ import { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 
+// Links API
 const API = import.meta.env.VITE_API;
 
 export default function Books() {
@@ -9,20 +10,21 @@ export default function Books() {
   const [error, setError] = useState(null);
   const { user, token } = useContext(AuthContext);
 
+  // Fetches Books
   useEffect(() => {
     async function fetchBooks() {
       try {
         const res = await fetch(`${API}/books`);
         if (!res.ok) throw new Error("Failed to fetch books");
         const data = await res.json();
-        setBooks(data.books);
+        setBooks(data.books || data || []);
       } catch (err) {
         setError(err.message);
       }
     }
     fetchBooks();
   }, []);
-
+  // Handles Reserve Function
   const handleReserve = async (bookId) => {
     try {
       const res = await fetch(`${API}/books/${bookId}/reserve`, {
@@ -46,9 +48,11 @@ export default function Books() {
     }
   };
 
+  // Handles Errors
   if (error) return <p>Error: {error}</p>;
-  if (!books.length) return <p>Loading books...</p>;
+  if (!books || books.length === 0) return <p>Loading books...</p>;
 
+  // Shows Book Catalog
   return (
     <div>
       <h1>Book Catalog</h1>
